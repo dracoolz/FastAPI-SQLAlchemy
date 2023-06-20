@@ -9,7 +9,7 @@ import schemas
 Base.metadata.create_all(engine) # Create the database
  
 # Initialize app
-app = FastAPI()
+app = FastAPI(title="こころい木")
  
 # Helper function to get database session
 def get_session():
