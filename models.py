@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import ForeignKey
 from database import Base
  
 # AppUser
@@ -13,11 +15,14 @@ class AppUser(Base):
     age = Column(Integer)
     gender = Column(String)
     quest_role = Column(Boolean)
-    family = Column(String)
+    family_id = Column(Integer, ForeignKey('Families.id'))
     last_login = Column(DateTime)
     createdAt = Column(DateTime)
     updatedAt = Column(DateTime)
     publishedAt = Column(DateTime)
+
+    family = relationship("Family", back_populates="user")
+    post = relationship("Post", back_populates="user")
 
 # Profile
 class Profile(Base):
@@ -38,12 +43,14 @@ class Family(Base):
     createdAt = Column(DateTime)
     updatedAt = Column(DateTime)
 
+    user = relationship("AppUser", back_populates="family")
+
 # Post
 class Post(Base):
     __tablename__ = 'Posts'
 
     id = Column(Integer, primary_key=True)
-    user = Column(Integer)
+    user_id = Column(Integer, ForeignKey('Users.id'))
     kids = Column(Integer)
     content = Column(String)
     image_url = Column(String)
@@ -51,6 +58,8 @@ class Post(Base):
     createdAt = Column(DateTime)
     updatedAt = Column(DateTime)
     publishedAt = Column(DateTime)
+
+    user = relationship("AppUser", back_populates="post")
 
 # Comment
 class Comment(Base):
@@ -82,6 +91,7 @@ class QuestType(Base):
     kinds = Column(String)
     online = Column(Boolean)
 
+    quest_id = relationship("Quest", back_populates="quests")
 
 # Rewards
 class Reward(Base):
@@ -97,5 +107,7 @@ class Quest(Base):
 
     id = Column(Integer, primary_key=True)
     content = Column(Integer)
-    quest_kinds = Column(String)
+    quest_kinds = Column(Integer, ForeignKey('QuestTypes.id'))
     completed = Column(Boolean)
+
+    quests = relationship("QuestType", back_populates="quest_id")

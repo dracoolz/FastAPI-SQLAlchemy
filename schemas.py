@@ -1,5 +1,22 @@
 from pydantic import BaseModel
+from typing import List, Optional
 from datetime import datetime
+
+# =================================Family===========================================
+# Create Family Schema (Pydantic Model)
+class FamilyCreate(BaseModel):
+    name: str
+    users: int
+
+# Complete Family Schema (Pydantic Model)
+class Family(BaseModel):
+    id: int
+    name: str
+    createdAt: datetime = None
+    updatedAt: datetime = None
+
+    class Config:
+        orm_mode = True
 
 # =================================App_User=========================================== 
 # Create appUser Schema (Pydantic Model)
@@ -7,11 +24,11 @@ class AppUserCreate(BaseModel):
     name: str
     email: str
     password: str
-    birth: int 
+    birth: int
     age: int
     gender: str
     quest_role: bool
-    family: str
+    family_id: int
 
 # Complete appUser Schema (Pydantic Model)
 class AppUser(BaseModel):
@@ -19,16 +36,17 @@ class AppUser(BaseModel):
     name: str
     email: str
     password: str
-    birth: int 
+    birth: int
     age: int
     gender: str
     quest_role: bool
-    family: str
+    family_id: int
+    family: Family
     last_login: datetime = None
     createdAt: datetime = None
     updatedAt: datetime = None
     publishedAt: datetime = None
- 
+
     class Config:
         orm_mode = True
 
@@ -49,25 +67,11 @@ class Profile(BaseModel):
     class Config:
         orm_mode = True
 
-# =================================Family===========================================
-# Create Family Schema (Pydantic Model)
-class FamilyCreate(BaseModel):
-    name: str
-
-# Complete Family Schema (Pydantic Model)
-class Family(BaseModel):
-    id: int
-    name: str
-    createdAt: datetime = None
-    updatedAt: datetime = None
-
-    class Config:
-        orm_mode = True
 
 # =================================Post===========================================
 # Create Post Schema (Pydantic Model)
 class PostCreate(BaseModel):
-    user: int
+    user_id: int
     kids: int
     content: str
     image_url: str
@@ -76,7 +80,8 @@ class PostCreate(BaseModel):
 # Complete Post Schema (Pydantic Model)
 class Post(BaseModel):
     id: int
-    user: int
+    user_id: int
+    user: AppUser
     kids: int
     content: str
     image_url: str
@@ -159,14 +164,15 @@ class Reward(BaseModel):
 # Create Quest Schema (Pydantic Model)
 class QuestCreate(BaseModel):
     content: int
-    quest_kinds: str
+    quest_kinds: int
     completed: bool
 
 # Complete Quest Schema (Pydantic Model)
 class Quest(BaseModel):
     id: int
     content: int
-    quest_kinds: str
+    quest_kinds: int
+    quests: QuestType
     completed: bool
 
     class Config:

@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import FastAPI, status, HTTPException, Depends
 from database import Base, engine, SessionLocal
+from sqlalchemy.orm import joinedload
 from datetime import datetime
 from sqlalchemy.orm import Session
 import models
@@ -23,25 +24,29 @@ def get_session():
 @app.get("/app-users", response_model = List[schemas.AppUser], tags=["users ユーザー"])
 def ユーザー一覧取得(session: Session = Depends(get_session)):
  
-    users_list = session.query(models.AppUser).all() # get all users items
+    users_list = (session.query(models.AppUser).all()) # get all users items
  
     return users_list 
 
 
-@app.get("/app-users/{id}", response_model=schemas.AppUser, tags=["users ユーザー"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
- 
-    users = session.query(models.AppUser).get(id) # get item with the given id
- 
-    # check if id exists. If not, return 404 not found response
-    if not users:
-        raise HTTPException(status_code=404, detail=f"users item with id {id} not found")
- 
-    return users
+@app.get("/app-users/{user_id}", response_model=schemas.AppUser, tags=["users ユーザー"])
+def get_user(user_id: int, session: Session = Depends(get_session)):
+    user = (
+        session.query(models.AppUser)
+        .options(joinedload(models.AppUser.family))  # Eager loading the 'family' relationship
+        .filter(models.AppUser.id == user_id)
+        .first()
+    )
+
+    # Check if user exists
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User with id {user_id} not found")
+
+    return user
  
 @app.post("/app-users", response_model=schemas.AppUser, status_code=status.HTTP_201_CREATED, tags=["users ユーザー"])
 def ユーザーの作成(users: schemas.AppUserCreate, session: Session = Depends(get_session)):
- 
+
     usersdb = models.AppUser(
         name=users.name,
         email=users.email,
@@ -50,7 +55,7 @@ def ユーザーの作成(users: schemas.AppUserCreate, session: Session = Depen
         age=users.age,
         gender=users.gender,
         quest_role=users.quest_role,
-        family=users.family,
+        family_id=users.family_id,
         last_login=datetime.today(),
         createdAt=datetime.today(),
         updatedAt=datetime.today(),
@@ -60,7 +65,7 @@ def ユーザーの作成(users: schemas.AppUserCreate, session: Session = Depen
     session.add(usersdb)
     session.commit()
     session.refresh(usersdb)
- 
+
     return usersdb
  
  
@@ -79,7 +84,7 @@ def 特定のユーザーの更新(id: int, users: schemas.AppUserCreate, sessio
     existing_users.age = users.age
     existing_users.gender = users.gender
     existing_users.quest_role = users.quest_role
-    existing_users.family = users.family
+    existing_users.family_id = users.family_id
 
     session.commit()
     session.refresh(existing_users)
@@ -259,7 +264,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
 def ユーザーの作成(post: schemas.PostCreate, session: Session = Depends(get_session)):
  
     postdb = models.Post(
-        user=post.user,
+        user_id=post.user_id,
         kids=post.kids,
         content=post.content,
         image_url=post.image_url,
@@ -284,7 +289,7 @@ def update_post(id: int, post: schemas.PostCreate, session: Session = Depends(ge
         raise HTTPException(status_code=404, detail=f"Post item with id {id} not found")
 
     # Update the attributes of the existing_post with the values from the post parameter
-    existing_post.user = post.user
+    existing_post.user_id = post.user_id
     existing_post.kids = post.kids
     existing_post.content = post.content
     existing_post.image_url = post.image_url
