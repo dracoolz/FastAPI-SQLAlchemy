@@ -30,7 +30,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/app-users/{user_id}", response_model=schemas.AppUser, tags=["users ユーザー"])
-def get_user(user_id: int, session: Session = Depends(get_session)):
+def 特定のユーザーの取得(user_id: int, session: Session = Depends(get_session)):
     user = (
         session.query(models.AppUser)
         .options(joinedload(models.AppUser.family))  # Eager loading the 'family' relationship
@@ -108,7 +108,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
 
 # ===============================Profile=============================================
 @app.get("/profiles", response_model = List[schemas.Profile], tags=["profiles プロファイル"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def プロファイル一覧取得(session: Session = Depends(get_session)):
  
     profile_list = session.query(models.Profile).all() # get all profile items
  
@@ -116,7 +116,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/profiles/{id}", response_model=schemas.Profile, tags=["profiles プロファイル"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定のプロファイルの取得(id: int, session: Session = Depends(get_session)):
  
     profile = session.query(models.Profile).get(id) # get item with the given id
  
@@ -127,7 +127,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return profile
  
 @app.post("/profiles", response_model=schemas.Profile, status_code=status.HTTP_201_CREATED, tags=["profiles プロファイル"])
-def ユーザーの作成(profile: schemas.ProfileCreate, session: Session = Depends(get_session)):
+def プロファイルの作成(profile: schemas.ProfileCreate, session: Session = Depends(get_session)):
  
     profiledb = models.Profile(
         name=profile.name,
@@ -143,7 +143,7 @@ def ユーザーの作成(profile: schemas.ProfileCreate, session: Session = Dep
  
  
 @app.put("/profiles/{id}", response_model=schemas.Profile, tags=["profiles プロファイル"])
-def 特定のユーザーの更新(id: int, profile: schemas.ProfileCreate, session: Session = Depends(get_session)):
+def 特定のプロファイルの更新(id: int, profile: schemas.ProfileCreate, session: Session = Depends(get_session)):
     # Check if the profile item with the given id exists
     existing_profile = session.query(models.Profile).get(id)
     if not existing_profile:
@@ -160,7 +160,7 @@ def 特定のユーザーの更新(id: int, profile: schemas.ProfileCreate, sess
     return existing_profile
  
 @app.delete("/profiles/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["profiles プロファイル"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定のプロファイルの削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     profile = session.query(models.Profile).get(id)
@@ -176,7 +176,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
 
 # ===============================Family=============================================
 @app.get("/families", response_model = List[schemas.Family], tags=["families 家族"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def 家族一覧取得(session: Session = Depends(get_session)):
  
     family_list = session.query(models.Family).all() # get all family items
  
@@ -184,7 +184,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/families/{id}", response_model=schemas.Family, tags=["families 家族"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定の家族の取得(id: int, session: Session = Depends(get_session)):
  
     family = session.query(models.Family).get(id) # get item with the given id
  
@@ -195,7 +195,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return family
  
 @app.post("/families", response_model=schemas.Family, status_code=status.HTTP_201_CREATED, tags=["families 家族"])
-def ユーザーの作成(family: schemas.FamilyCreate, session: Session = Depends(get_session)):
+def 家族の作成(family: schemas.FamilyCreate, session: Session = Depends(get_session)):
  
     familydb = models.Family(
         name=family.name,
@@ -211,7 +211,7 @@ def ユーザーの作成(family: schemas.FamilyCreate, session: Session = Depen
  
  
 @app.put("/families/{id}", response_model=schemas.Family, tags=["families 家族"])
-def 特定のユーザーの更新(id: int, family: schemas.FamilyCreate, session: Session = Depends(get_session)):
+def 特定の家族の更新(id: int, family: schemas.FamilyCreate, session: Session = Depends(get_session)):
     # Check if the family item with the given id exists
     existing_family = session.query(models.Family).get(id)
     if not existing_family:
@@ -226,7 +226,7 @@ def 特定のユーザーの更新(id: int, family: schemas.FamilyCreate, sessio
     return existing_family
  
 @app.delete("/families/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["families 家族"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定の家族の削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     family = session.query(models.Family).get(id)
@@ -242,7 +242,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
 
 # ===============================Post=============================================
 @app.get("/posts", response_model = List[schemas.Post], tags=["posts"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def 投稿一覧取得(session: Session = Depends(get_session)):
  
     post_list = session.query(models.Post).all() # get all post items
  
@@ -250,7 +250,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/posts/{id}", response_model=schemas.Post, tags=["posts"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定の投稿の取得(id: int, session: Session = Depends(get_session)):
  
     post = session.query(models.Post).get(id) # get item with the given id
  
@@ -261,7 +261,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return post
  
 @app.post("/posts", response_model=schemas.Post, status_code=status.HTTP_201_CREATED, tags=["posts"])
-def ユーザーの作成(post: schemas.PostCreate, session: Session = Depends(get_session)):
+def 投稿の作成(post: schemas.PostCreate, session: Session = Depends(get_session)):
  
     postdb = models.Post(
         user_id=post.user_id,
@@ -282,7 +282,7 @@ def ユーザーの作成(post: schemas.PostCreate, session: Session = Depends(g
  
  
 @app.put("/posts/{id}", response_model=schemas.Post, tags=["posts"])
-def update_post(id: int, post: schemas.PostCreate, session: Session = Depends(get_session)):
+def 特定の投稿の更新(id: int, post: schemas.PostCreate, session: Session = Depends(get_session)):
     # Check if the post item with the given id exists
     existing_post = session.query(models.Post).get(id)
     if not existing_post:
@@ -301,7 +301,7 @@ def update_post(id: int, post: schemas.PostCreate, session: Session = Depends(ge
     return existing_post
  
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["posts"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定の投稿の削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     post = session.query(models.Post).get(id)
@@ -318,7 +318,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
 
 # ===============================Comment=============================================
 @app.get("/comments", response_model = List[schemas.Comment], tags=["comments"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def コメント一覧取得(session: Session = Depends(get_session)):
  
     comment_list = session.query(models.Comment).all() # get all Comment items
  
@@ -326,7 +326,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/comments/{id}", response_model=schemas.Comment, tags=["comments"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定のコメントの取得(id: int, session: Session = Depends(get_session)):
  
     comment = session.query(models.Comment).get(id) # get item with the given id
  
@@ -337,7 +337,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return comment
  
 @app.post("/comments", response_model=schemas.Comment, status_code=status.HTTP_201_CREATED, tags=["comments"])
-def ユーザーの作成(comment: schemas.CommentCreate, session: Session = Depends(get_session)):
+def コメントの作成(comment: schemas.CommentCreate, session: Session = Depends(get_session)):
  
     commentdb = models.Comment(
         parent_id = comment.parent_id,
@@ -355,7 +355,7 @@ def ユーザーの作成(comment: schemas.CommentCreate, session: Session = Dep
  
  
 @app.put("/comments/{id}", response_model=schemas.Comment, tags=["comments"])
-def update_post(id: int, comment: schemas.CommentCreate, session: Session = Depends(get_session)):
+def 特定のコメントの更新(id: int, comment: schemas.CommentCreate, session: Session = Depends(get_session)):
     # Check if the comment item with the given id exists
     existing_comment = session.query(models.Comment).get(id)
     if not existing_comment:
@@ -373,7 +373,7 @@ def update_post(id: int, comment: schemas.CommentCreate, session: Session = Depe
     return existing_comment
  
 @app.delete("/comments/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["comments"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定のコメントの削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     comment = session.query(models.Comment).get(id)
@@ -390,7 +390,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
  
 # ===============================Tree=============================================
 @app.get("/trees", response_model = List[schemas.Tree], tags=["trees"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def 木一覧取得(session: Session = Depends(get_session)):
  
     tree_list = session.query(models.Tree).all() # get all Tree items
  
@@ -398,7 +398,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/trees/{id}", response_model=schemas.Tree, tags=["trees"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定の木の取得(id: int, session: Session = Depends(get_session)):
  
     tree = session.query(models.Tree).get(id) # get item with the given id
  
@@ -409,7 +409,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return tree
  
 @app.post("/trees", response_model=schemas.Tree, status_code=status.HTTP_201_CREATED, tags=["trees"])
-def ユーザーの作成(tree: schemas.TreeCreate, session: Session = Depends(get_session)):
+def 木の作成(tree: schemas.TreeCreate, session: Session = Depends(get_session)):
  
     treedb = models.Tree(
         growth_stage = tree.growth_stage,
@@ -425,7 +425,7 @@ def ユーザーの作成(tree: schemas.TreeCreate, session: Session = Depends(g
  
  
 @app.put("/trees/{id}", response_model=schemas.Tree, tags=["trees"])
-def update_post(id: int, tree: schemas.TreeCreate, session: Session = Depends(get_session)):
+def 特定の木の更新(id: int, tree: schemas.TreeCreate, session: Session = Depends(get_session)):
     # Check if the tree item with the given id exists
     existing_tree = session.query(models.Tree).get(id)
     if not existing_tree:
@@ -441,7 +441,7 @@ def update_post(id: int, tree: schemas.TreeCreate, session: Session = Depends(ge
     return existing_tree
  
 @app.delete("/trees/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["trees"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定の木の削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     tree = session.query(models.Tree).get(id)
@@ -458,7 +458,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
  
 # ===============================QuestType=============================================
 @app.get("/quest_types", response_model = List[schemas.QuestType], tags=["quest_types"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def クエストタイプ一覧取得(session: Session = Depends(get_session)):
  
     questtype_list = session.query(models.QuestType).all() # get all QuestType items
  
@@ -466,7 +466,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/quest_types/{id}", response_model=schemas.QuestType, tags=["quest_types"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定のクエストタイプの取得(id: int, session: Session = Depends(get_session)):
  
     questtype = session.query(models.QuestType).get(id) # get item with the given id
  
@@ -477,7 +477,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return questtype
  
 @app.post("/quest_types", response_model=schemas.QuestType, status_code=status.HTTP_201_CREATED, tags=["quest_types"])
-def ユーザーの作成(questtype: schemas.QuestTypeCreate, session: Session = Depends(get_session)):
+def クエストタイプの作成(questtype: schemas.QuestTypeCreate, session: Session = Depends(get_session)):
  
     questtypedb = models.QuestType(
         kinds = questtype.kinds,
@@ -492,7 +492,7 @@ def ユーザーの作成(questtype: schemas.QuestTypeCreate, session: Session =
  
  
 @app.put("/quest_types/{id}", response_model=schemas.QuestType, tags=["quest_types"])
-def update_post(id: int, questtype: schemas.QuestTypeCreate, session: Session = Depends(get_session)):
+def 特定のクエストタイプの更新(id: int, questtype: schemas.QuestTypeCreate, session: Session = Depends(get_session)):
     # Check if the questtype item with the given id exists
     existing_tree = session.query(models.QuestType).get(id)
     if not existing_tree:
@@ -508,7 +508,7 @@ def update_post(id: int, questtype: schemas.QuestTypeCreate, session: Session = 
     return existing_tree
  
 @app.delete("/quest_types/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["quest_types"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定のクエストタイプの削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     questtype = session.query(models.QuestType).get(id)
@@ -525,7 +525,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
  
 # ===============================Reward=============================================
 @app.get("/rewards", response_model = List[schemas.Reward], tags=["rewards"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def 褒美一覧取得(session: Session = Depends(get_session)):
  
     reward_list = session.query(models.Reward).all() # get all Reward items
  
@@ -533,7 +533,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/rewards/{id}", response_model=schemas.Reward, tags=["rewards"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定の褒美の取得(id: int, session: Session = Depends(get_session)):
  
     reward = session.query(models.Reward).get(id) # get item with the given id
  
@@ -544,7 +544,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return reward
  
 @app.post("/rewards", response_model=schemas.Reward, status_code=status.HTTP_201_CREATED, tags=["rewards"])
-def ユーザーの作成(reward: schemas.RewardCreate, session: Session = Depends(get_session)):
+def 褒美の作成(reward: schemas.RewardCreate, session: Session = Depends(get_session)):
  
     rewarddb = models.Reward(
         content = reward.content
@@ -558,7 +558,7 @@ def ユーザーの作成(reward: schemas.RewardCreate, session: Session = Depen
  
  
 @app.put("/rewards/{id}", response_model=schemas.Reward, tags=["rewards"])
-def update_post(id: int, reward: schemas.RewardCreate, session: Session = Depends(get_session)):
+def 特定の褒美の更新(id: int, reward: schemas.RewardCreate, session: Session = Depends(get_session)):
     # Check if the reward item with the given id exists
     existing_reward = session.query(models.Reward).get(id)
     if not existing_reward:
@@ -573,7 +573,7 @@ def update_post(id: int, reward: schemas.RewardCreate, session: Session = Depend
     return existing_reward
  
 @app.delete("/rewards/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["rewards"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定の褒美の削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     reward = session.query(models.Reward).get(id)
@@ -590,7 +590,7 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
  
 # ===============================Quest=============================================
 @app.get("/quests", response_model = List[schemas.Quest], tags=["quests"])
-def ユーザー一覧取得(session: Session = Depends(get_session)):
+def クエスト一覧取得(session: Session = Depends(get_session)):
  
     quests_list = session.query(models.Quest).all() # get all quests items
  
@@ -598,7 +598,7 @@ def ユーザー一覧取得(session: Session = Depends(get_session)):
 
 
 @app.get("/quests/{id}", response_model=schemas.Quest, tags=["quests"])
-def 特定のユーザーの取得(id: int, session: Session = Depends(get_session)):
+def 特定のクエストの取得(id: int, session: Session = Depends(get_session)):
  
     quests = session.query(models.Quest).get(id) # get item with the given id
  
@@ -609,7 +609,7 @@ def 特定のユーザーの取得(id: int, session: Session = Depends(get_sessi
     return quests
  
 @app.post("/quests", response_model=schemas.Quest, status_code=status.HTTP_201_CREATED, tags=["quests"])
-def ユーザーの作成(quests: schemas.QuestCreate, session: Session = Depends(get_session)):
+def クエストの作成(quests: schemas.QuestCreate, session: Session = Depends(get_session)):
  
     questsdb = models.Quest(
         content=quests.content,
@@ -625,7 +625,7 @@ def ユーザーの作成(quests: schemas.QuestCreate, session: Session = Depend
  
  
 @app.put("/quests/{id}", response_model=schemas.Quest, tags=["quests"])
-def 特定のユーザーの更新(id: int, quests: schemas.QuestCreate, session: Session = Depends(get_session)):
+def 特定のクエストの更新(id: int, quests: schemas.QuestCreate, session: Session = Depends(get_session)):
     # Check if the quests item with the given id exists
     existing_quests = session.query(models.Quest).get(id)
     if not existing_quests:
@@ -642,7 +642,7 @@ def 特定のユーザーの更新(id: int, quests: schemas.QuestCreate, session
     return existing_quests
  
 @app.delete("/quests/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["quests"])
-def 特定のユーザーの削除(id: int, session: Session = Depends(get_session)):
+def 特定のクエストの削除(id: int, session: Session = Depends(get_session)):
  
     # get the given id
     quests = session.query(models.Quest).get(id)
@@ -656,3 +656,67 @@ def 特定のユーザーの削除(id: int, session: Session = Depends(get_sessi
  
     return None
  
+# ===============================Closeness=============================================
+@app.get("/closeness", response_model = List[schemas.Closeness], tags=["closeness"])
+def Closenessの一覧取得(session: Session = Depends(get_session)):
+ 
+    closeness_list = (session.query(models.Closeness).all()) # get all closeness items
+ 
+    return closeness_list 
+
+
+@app.get("/closeness/{id}", response_model=schemas.Closeness, tags=["closeness"])
+def 特定のClosenessを取得(id: int, session: Session = Depends(get_session)):
+    close = session.query(models.Closeness).get(id) # get item with the given id
+
+    # Check if close exists
+    if not close:
+        raise HTTPException(status_code=404, detail=f"Closeness with id {id} not found")
+
+    return close
+ 
+@app.post("/closeness", response_model=schemas.Closeness, status_code=status.HTTP_201_CREATED, tags=["closeness"])
+def Closenessの作成(closeness: schemas.ClosenessCreate, session: Session = Depends(get_session)):
+
+    closenessdb = models.Closeness(
+        tree_id=closeness.tree_id,
+        close_meter=closeness.close_meter,
+    )
+ 
+    session.add(closenessdb)
+    session.commit()
+    session.refresh(closenessdb)
+
+    return closenessdb
+ 
+ 
+@app.put("/closeness/{id}", response_model=schemas.Closeness, tags=["closeness"])
+def 特定のClosenessの更新(id: int, closeness: schemas.ClosenessCreate, session: Session = Depends(get_session)):
+    # Check if the closeness item with the given id exists
+    existing_closeness = session.query(models.Closeness).get(id)
+    if not existing_closeness:
+        raise HTTPException(status_code=404, detail=f"Closeness item with id {id} not found")
+
+    # Update the attributes of the existing_closeness with the values from the closeness parameter
+    existing_closeness.tree_id = closeness.tree_id
+    existing_closeness.close_meter = closeness.close_meter
+
+    session.commit()
+    session.refresh(existing_closeness)
+
+    return existing_closeness
+ 
+@app.delete("/closeness/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["closeness"])
+def 特定のClosenessの削除(id: int, session: Session = Depends(get_session)):
+ 
+    # get the given id
+    closeness = session.query(models.Closeness).get(id)
+ 
+    # if closeness item with given id exists, delete it from the database. Otherwise raise 404 error
+    if closeness:
+        session.delete(closeness)
+        session.commit()
+    else:
+        raise HTTPException(status_code=404, detail=f"closeness item with id {id} not found")
+ 
+    return None

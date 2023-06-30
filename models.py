@@ -82,6 +82,7 @@ class Tree(Base):
     quest = Column(Integer)
     watering = Column(DateTime)
 
+    closeness = relationship("Closeness", back_populates="tree")
 
 # Quest types
 class QuestType(Base):
@@ -111,3 +112,13 @@ class Quest(Base):
     completed = Column(Boolean)
 
     quests = relationship("QuestType", back_populates="quest_id")
+    
+# Closeness
+class Closeness(Base):
+    __tablename__ = 'Closenesses'
+
+    id = Column(Integer, primary_key=True)
+    tree_id = Column(Integer, ForeignKey('Trees.id'))
+    close_meter = Column(Integer)
+
+    tree = relationship("Tree", back_populates="closeness")
